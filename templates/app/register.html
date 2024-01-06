@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Attendance - Register</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="icon" type="image/png" href="https://cdn3.iconfinder.com/data/icons/design-thinking-3d/256/ClipBoard.png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+    body {
+      background-image: url(https://images.pexels.com/photos/2952871/pexels-photo-2952871.jpeg?auto=compress&cs=tinysrgb&w=600);
+      background-repeat: no-repeat center center fixed; 
+      background-size: cover;
+    }
+    .wrapper {
+      width: 380px;
+      padding: 2rem 0 1rem 0;
+      margin: 30px auto;
+      margin-top: 140px;
+      background: #fff;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      font-size: 1.5rem;
+      color: #07001f;
+    }
+    p {
+      margin-bottom: 1.7rem;
+    }
+    form input {
+      width: 85%;
+      outline: none;
+      border: none;
+      background: #dfe9f5;
+      padding: 15px 20px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+    }
+    button {
+      font-size: 1.1rem;
+      margin-top: 1rem;
+      padding: 8px 0;
+      border-radius: 5px;
+      outline: none;
+      border: none;
+      width: 85%;
+      background: white;
+      color: rgba(81, 34, 209, 0.767);
+      cursor: pointer;
+    }
+    button:hover {
+      background: rgba(81, 34, 209, 0.767);
+      color: #dfe9f5;
+    }
+    .not-member {
+      font-size: 0.9rem;
+      margin-top: 1.4rem;
+    }
+    .not-member a {
+      color: #7f38e2;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: none;
+    }
+    a:link {
+      text-decoration: none;
+    }
+    a:visited {
+      text-decoration: none;
+    }
+    a:active {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>Create your account!</h1>
+    <p><br>Platform for managing attendance<br> for various ocassions🚀 </p>
+    <form action="/register" method="post">
+      {% csrf_token %}
+      <input type="text" placeholder="Enter Username" name="username" required>
+      <input type="text" placeholder="Enter first name" name="fname" required>
+      <input type="text" placeholder="Enter last name" name="lname" required>
+      <input type="email" placeholder="Enter your email" name="email" required>
+      <input type="password" placeholder="Password" name="password" required>
+      <input type="password" placeholder="Confirm Password" name="c_password" required>
+      <button type="submit">Register</button>
+    </form>
+    <div class="not-member">
+      Already have an account? <a href='/signin'>Log In</a>
+    </div>
+  </div>
+</body>
+</html>
