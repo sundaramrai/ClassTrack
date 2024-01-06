@@ -43,7 +43,6 @@ Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/) with your browser to see t
 ## Glimpse of Django-App
 
 ![image](https://github.com/sundaram-rai/django-erp-attendance/assets/98939843/f4e8f83b-ab57-4127-b87c-f7c7a4307e48) ![image](https://github.com/sundaram-rai/django-erp-attendance/assets/98939843/cb06b294-d73a-4d1f-9c18-ec58b294eb29)
-![image](https://github.com/sundaram-rai/django-erp-attendance/assets/98939843/1fff7ab7-3e44-45a1-bde8-b554e44e1ab7) ![image](https://github.com/sundaram-rai/django-erp-attendance/assets/98939843/799bb8ab-45a9-482c-ba1c-42ae8d88640d)
 
 
 
