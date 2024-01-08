@@ -1,19 +1,19 @@
 ## Getting Started
 
 First, we have to install **virtualenv** to start the project in command prompt.
-```
+`
 pip install virtualenv
-```
+`
 
 Then, we need to create virtualenv by running below code:
-```
+`
 virtualenv <name_of_your_environment>
-```
+`
 
 After installation we need to activate virtualenv by running:
-```
+`
 .\env\Scripts\activate
-```
+`
 
 Once virtualenv is activated.
 Execute these commands to build your Django project
@@ -27,14 +27,14 @@ python manage.py createsuperuser
 
 FInally, after executing all these steps you should keep your file structure similar to these project.
 Then run these command to **migarte** all the changes/
-```
+`
 python manage.py migrate
-```
+`
 
 Now, to start with running your application run this command:
-```
+`
 python manage.py runserver
-```
+`
 
 ## Start your development 
 
