@@ -20,15 +20,7 @@ def signin(request):
 
         if user is not None:
             django_login(request,user)
-            fname=user.first_name
-            if username != username:
-                messages.error(request,"Username doesn't exist")
-                return redirect('signin')
-            elif password != password:
-                messages.error(request,"Password doesn't exist")
-                return redirect('signin')
-            else:
-                return render(request, "app/index.html",{'fname':fname})
+            return redirect('dashboard')
         else:
             messages.error(request,"Error Credentials")
             return redirect('index')
@@ -72,10 +64,108 @@ def register(request):
     return render(request,"app/register.html")
 
 def dashboard(request):
-    return render(request,"app/dashboard.html")
+    user_cards = [
+        {
+            "img": "https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDV8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60g",
+            "name": "Neil Wilson",
+            "department": "COMP",
+            "percent": 85,
+        },
+        {
+            "img": "https://images.unsplash.com/photo-1543132220-3ec99c6094dc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDl8fHByb2ZpbGV8ZW58MHwxfDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+            "name": "Finn Taylor",
+            "department": "IT",
+            "percent": 82,
+        },
+        {
+            "img": "https://images.unsplash.com/photo-1598198414976-ddb788ec80c1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NzV8fHByb2ZpbGV8ZW58MHwxfDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+            "name": "Nick Johnson",
+            "department": "EXTC",
+            "percent": 94,
+        },
+        {
+            "img": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHByb2ZpbGV8ZW58MHwxfDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+            "name": "Sarah Mayer",
+            "department": "AI&DS",
+            "percent": 85,
+        },
+        {
+            "img": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzN8fHByb2ZpbGV8ZW58MHwxfDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+            "name": "Zayn Shaw",
+            "department": "AI&ML",
+            "percent": 82,
+        },
+        {
+            "img": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDR8fHByb2ZpbGV8ZW58MHwxfDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+            "name": "Moses Kaul",
+            "department": "COMP",
+            "percent": 93,
+        },
+    ]
+    attendance_list = [
+        {
+            "id": "102684",
+            "name": "Neil Wilson",
+            "department": "COMP",
+            "date": "03-24-22",
+            "year": "SE",
+            "division": "B"
+        },
+        {
+            "id": "102168",
+            "name": "Finn Taylor",
+            "department": "IT",
+            "date": "03-24-22",
+            "year": "SE",
+            "division": "A"
+        },
+        {
+            "id": "103428",
+            "name": "Nick Johnson",
+            "department": "EXTC",
+            "date": "03-24-22",
+            "year": "TE",
+            "division": "C"
+        },
+        {
+            "id": "101224",
+            "name": "Sarah Mayer",
+            "department": "AI&DS",
+            "date": "03-24-22",
+            "year": "FE",
+            "division": "B"
+        },
+        {
+            "id": "102554",
+            "name": "Zayn Shaw",
+            "department": "AI&ML",
+            "date": "03-24-22",
+            "year": "SE",
+            "division": "C"
+        },
+        {
+            "id": "104763",
+            "name": "Moses Kaul",
+            "department": "COMP",
+            "date": "03-24-22",
+            "year": "BE",
+            "division": "A"
+        },
+        {
+            "id": "104763",
+            "name": "Moses Kaul",
+            "department": "COMP",
+            "date": "03-24-22",
+            "year": "BE",
+            "division": "A"
+        },
+    ]
+    return render(request, "app/dashboard.html", {
+        "user_cards": user_cards,
+        "attendance_list": attendance_list,
+    })
 
 def signout(request):
-    # pass
     logout(request)
     messages.success(request,"Logged out successfully")
     return redirect('index')
