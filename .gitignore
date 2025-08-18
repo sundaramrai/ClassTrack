@@ -1,0 +1,5 @@
+# created by virtualenv automatically
+/node_modules
+/app/__pycache__/
+/erp/__pycache__/
+instructions.ini
