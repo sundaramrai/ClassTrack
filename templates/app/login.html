@@ -1,129 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Attendance - Login</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <link rel="icon" type="image/png" href="https://cdn3.iconfinder.com/data/icons/design-thinking-3d/256/ClipBoard.png">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
-    }
-    body {
-      background-image: url(https://images.pexels.com/photos/2952871/pexels-photo-2952871.jpeg?auto=compress&cs=tinysrgb&w=600);
-      background-repeat: no-repeat center center fixed; 
-      background-size: cover;
-    }
-    .wrapper {
-      width: 300px;
-      padding: 2rem 0 1rem 0;
-      margin: 50px auto;
-      background: #fff;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
-      margin-top: 230px;
-    }
-    h1 {
-      font-size: 2rem;
-      color: #07001f;
-    }
-    p {
-      margin-bottom: 1.7rem;
-    }
-    form input {
-      width: 85%;
-      outline: none;
-      border: none;
-      background: #dfe9f5;
-      padding: 12px 14px;
-      margin-bottom: 10px;
-      border-radius: 10px;
-    }
-    .recover {
-      text-align: right;
-      font-size: 0.8rem;
-      margin: 0.2rem 1.7rem 0 0;
-    }
-    .recover a {
-      text-decoration: none;
-      color: #07001f;
-    }
-    button {
-      font-size: 1.1rem;
-      margin-top: 1rem;
-      padding: 8px 0;
-      border-radius: 5px;
-      outline: none;
-      border: none;
-      width: 85%;
-      background: white;
-      color: rgba(81, 34, 209, 0.767);
-      cursor: pointer;
-    }
-    button:hover {
-      background: rgba(81, 34, 209, 0.767);
-      color: #dfe9f5;
-    }
-    .or {
-      font-size: 0.8rem;
-      margin-top: 1.5rem;
-    }
-    .icons i {
-      color: #07001f;
-      padding: 00.8rem 1.5rem;
-      border-radius: 10px;
-      margin-left: .9rem;
-      font-size: 1.5rem;
-      cursor: pointer;
-      border: 2px solid #dfe9f5;
-    }
-    .icons i:hover {
-      color: #fff !important;
-      background: #07001f;
-      transition: 0.7s;
-    }
-    .not-member {
-      font-size: 0.8rem;
-      margin-top: 1.4rem;
-    }
-    .not-member a {
-      color: #7f38e2;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: none;
-    }
-    a:link {
-      text-decoration: none;
-    }
-    a:visited {
-      text-decoration: none;
-    }
-    a:active {
-      text-decoration: none;
-    }
-  </style>
-</head>
-<body>
-  <div class="wrapper">
-    <h1>Hello Again!</h1>
-    <p><br>Welcome back..glad to <br> see you again✌️</p>
-    <form action="/signin" method="post">
-      {% csrf_token %}
-      <input type="text" placeholder="Enter Username" name="username" required>
-      <input type="password" placeholder="Password" name="password" required>
-      <button>Sign In</button>
-    </form>
-    <p class="or">
-      ----- or continue with -----</p>
-    <div class="not-member">
-      Not registered? <a href='/register'>Register Now</a>
+{% extends "app/base.html" %}
+{% block title %}ClassTrack - Login{% endblock %}
+{% block body_class %}d-flex align-items-center justify-content-center min-vh-100{% endblock %}
+{% block content %}
+<div class="col-12 col-sm-8 col-md-6 col-lg-4">
+  <div class="card shadow-lg border-0">
+    <div class="card-body p-4">
+      <div class="text-center mb-4">
+        <img src="https://cdn3.iconfinder.com/data/icons/design-thinking-3d/256/ClipBoard.png" alt="Logo"
+          style="width:60px;" class="mb-2">
+        <h2 class="fs-3 text-primary mb-1">Welcome Back!</h2>
+        <p class="text-muted mb-0">Sign in to your account</p>
+      </div>
+      <form action="/signin" method="post" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+          <label for="username" class="sr-only">Username</label>
+          <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username" required
+            autofocus>
+        </div>
+        <div class="form-group mb-3">
+          <label for="password" class="sr-only">Password</label>
+          <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+        </div>
+        <button class="btn btn-primary btn-block mb-3" type="submit">Sign In</button>
+      </form>
+      <div class="text-center mb-3">
+        <span class="text-muted small">or</span>
+      </div>
+      <div class="text-center">
+        <span class="not-member small">
+          Not registered?
+          <a href='/register' class="text-primary font-weight-bold">Register Now</a>
+        </span>
+      </div>
     </div>
   </div>
-</body>
-</html>
+</div>
+{% endblock %}
