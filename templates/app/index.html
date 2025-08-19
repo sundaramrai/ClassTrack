@@ -2,11 +2,12 @@
 {% block title %}Welcome to ClassTrack - Student Attendance System{% endblock %}
 {% block body_class %}d-flex align-items-center justify-content-center min-vh-100{% endblock %}
 {% block content %}
+{% load static %}
 <div class="col-12 col-sm-8 col-md-6 col-lg-4">
     <div class="card shadow-lg border-0">
         <div class="card-body p-4">
             <div class="text-center mb-4">
-                <img src="https://cdn3.iconfinder.com/data/icons/design-thinking-3d/256/ClipBoard.png" alt="Logo"
+                <img src="{% static 'images/icon.png' %}" alt="Logo"
                     style="width:60px;" class="mb-2">
                 <h1 class="mb-3 text-primary fs-3">ClassTrack</h1>
                 <p class="lead text-muted mb-4">
@@ -15,8 +16,8 @@
                 </p>
             </div>
             <div class="mb-4 text-center">
-                <a href="/signin" class="btn btn-primary btn-block mb-2">Login</a>
-                <a href="/register" class="btn btn-outline-primary btn-block">Register</a>
+                <a href="/login" class="btn btn-primary btn-block mb-2">Login</a>
+                <a href="/contact" class="btn btn-outline-primary btn-block">Contact Us</a>
             </div>
             <div class="mt-4 text-center">
                 <small class="text-muted">&copy; {{ year|default:"2025" }} ClassTrack</small>
