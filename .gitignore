@@ -3,3 +3,4 @@
 /app/__pycache__/
 /erp/__pycache__/
 instructions.ini
+db.sqlite3
