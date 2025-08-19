@@ -2,22 +2,18 @@
 {% block title %}ClassTrack - Register{% endblock %}
 {% block body_class %}d-flex align-items-center justify-content-center min-vh-100{% endblock %}
 {% block content %}
+{% load static %}
 <div class="col-12 col-sm-8 col-md-6 col-lg-4">
   <div class="card shadow-lg border-0">
     <div class="card-body p-4">
       <div class="text-center mb-4">
-        <img src="https://cdn3.iconfinder.com/data/icons/design-thinking-3d/256/ClipBoard.png" alt="Logo"
+        <img src="{% static 'images/icon.png' %}" alt="Logo"
           style="width:60px;" class="mb-2">
         <h2 class="fs-4 text-primary mb-1">Create your account!</h2>
         <p class="text-muted mb-0">Platform for managing attendance for various occasions 🚀</p>
       </div>
       <form action="/register" method="post" autocomplete="off">
         {% csrf_token %}
-        <!-- Username -->
-        <div class="form-group mb-2">
-          <label for="username" class="sr-only">Username</label>
-          <input type="text" class="form-control" id="username" placeholder="Username" name="username" required>
-        </div>
         <!-- Email -->
         <div class="form-group mb-2">
           <label for="email" class="sr-only">Email</label>
@@ -49,7 +45,7 @@
       <div class="text-center mt-3">
         <span class="not-member small">
           Already have an account?
-          <a href='/signin' class="text-primary font-weight-bold">Log In</a>
+          <a href='/login' class="text-primary font-weight-bold">Log In</a>
         </span>
       </div>
     </div>
