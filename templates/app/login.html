@@ -2,36 +2,31 @@
 {% block title %}ClassTrack - Login{% endblock %}
 {% block body_class %}d-flex align-items-center justify-content-center min-vh-100{% endblock %}
 {% block content %}
+{% load static %}
 <div class="col-12 col-sm-8 col-md-6 col-lg-4">
   <div class="card shadow-lg border-0">
     <div class="card-body p-4">
       <div class="text-center mb-4">
-        <img src="https://cdn3.iconfinder.com/data/icons/design-thinking-3d/256/ClipBoard.png" alt="Logo"
-          style="width:60px;" class="mb-2">
-        <h2 class="fs-3 text-primary mb-1">Welcome Back!</h2>
-        <p class="text-muted mb-0">Sign in to your account</p>
+        <img src="{% static 'images/icon.png' %}" alt="Logo" style="width:60px;" class="mb-2">
+        <h2 class="fs-4 text-primary mb-1">Welcome Back!</h2>
+        <p class="text-muted mb-0">Sign in to manage attendance and more 🚀</p>
       </div>
-      <form action="/signin" method="post" autocomplete="off">
+      <form action="/login" method="post" autocomplete="off">
         {% csrf_token %}
-        <div class="form-group mb-3">
-          <label for="username" class="sr-only">Username</label>
-          <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username" required
-            autofocus>
+        <!-- UserID or Email -->
+        <div class="form-group mb-2">
+          <label for="user" class="sr-only">UserID or Email</label>
+          <input type="text" class="form-control" id="user" placeholder="UserID or Email" name="user" required>
         </div>
-        <div class="form-group mb-3">
+        <!-- Password -->
+        <div class="form-group mb-2">
           <label for="password" class="sr-only">Password</label>
           <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
         </div>
-        <button class="btn btn-primary btn-block mb-3" type="submit">Sign In</button>
+        <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
       </form>
-      <div class="text-center mb-3">
-        <span class="text-muted small">or</span>
-      </div>
-      <div class="text-center">
-        <span class="not-member small">
-          Not registered?
-          <a href='/register' class="text-primary font-weight-bold">Register Now</a>
-        </span>
+      <div class="mt-4 text-center">
+        <small class="text-muted">&copy; {{ year|default:"2025" }} ClassTrack</small>
       </div>
     </div>
   </div>
