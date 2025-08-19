@@ -2,19 +2,16 @@
 {% block title %}ClassTrack - Dashboard{% endblock %}
 {% block body_class %}bg-light min-vh-100{% endblock %}
 {% block content %}
-<div class="position-fixed w-100 h-100">
-	<div class="w-100 h-100"></div>
-</div>
+{% load static %}
 <div class="container-fluid">
 	<div class="row">
 		<!-- Sidebar -->
 		<nav
 			class="col-md-2 d-none d-md-flex flex-column align-items-center bg-white border-right py-4 min-vh-100 shadow-sm">
 			<div class="mb-4 text-center w-100">
-				<img src="https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZmlsZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-					class="rounded-circle mb-2 img-fluid shadow" style="width:70px; height:70px; object-fit:cover;"
-					alt="User">
-				<div class="font-weight-bold text-uppercase mt-2 text-primary">{{ user.first_name }} {{ user.last_name }}</div>
+				<img src="{% static 'images/user.png' %}" alt="User" class="rounded-circle mb-2 img-fluid shadow"
+					style="width:70px; height:70px; object-fit:cover;">
+				<div class="font-weight-bold text-uppercase mt-2 text-primary">{{ user.first_name }} {{ user.last_name}}</div>
 				<div class="text-muted">@{{ user.username }}</div>
 			</div>
 			<ul class="nav flex-column w-100">
