@@ -1,68 +1,74 @@
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as django_login,logout
-# from user import settings
-# from django.core.mail import send_mail
+from django.contrib.auth import authenticate, login as django_login, logout as django_logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
     return render(request,"app/index.html")
 
 def signin(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
     if request.method=="POST":
         username=request.POST['username']
         password=request.POST['password']
 
-        user=authenticate(username=username,password=password)
+        user=authenticate(request, username=username,password=password)
 
         if user is not None:
             django_login(request,user)
+            messages.success(request, "You have successfully logged in.")
             return redirect('dashboard')
         else:
-            messages.error(request,"Error Credentials")
-            return redirect('index')
-
+            messages.error(request,"Invalid credentials")
+            return render(request, "app/login.html")
     return render(request,"app/login.html")
 
 def register(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
     if request.method=="POST":
         email=request.POST['email']
         username=request.POST['username']
         fname=request.POST['fname']
         lname=request.POST['lname']
-        # mob=request.POST['mob']
         password=request.POST['password']
         c_password=request.POST['c_password']
 
-        if User.objects.filter(username=username):
-            messages.error(request,"Username already exist")
-            return redirect('index')
-        
-        if User.objects.filter(email=email):
-            messages.error(request,"Email already exist")
-            return redirect('index')
-        
+        has_error = False
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request,"Username already exists")
+            has_error = True
+        if User.objects.filter(email=email).exists():
+            messages.error(request,"Email already exists")
+            has_error = True
         if len(username)>10:
             messages.error(request,"Username must be under 10 characters")
-
+            has_error = True
         if password != c_password:
-            messages.error(request,"Password didn't match")
+            messages.error(request,"Passwords do not match")
+            has_error = True
+
+        if has_error:
+            return render(request, "app/register.html")
 
         myuser=User.objects.create_user(username,email,password)
         myuser.first_name=fname
         myuser.last_name=lname
-        # myuser.email=email
         myuser.save()
 
-        messages.success(request,'You have registered successfully')
+        messages.success(request,'You have registered successfully. Please login.')
 
         return redirect('signin')
 
     return render(request,"app/register.html")
 
+@login_required(login_url='signin')
 def dashboard(request):
     user_cards = [
         {
@@ -166,6 +172,6 @@ def dashboard(request):
     })
 
 def signout(request):
-    logout(request)
-    messages.success(request,"Logged out successfully")
+    django_logout(request)
+    messages.success(request, "You are successfully logged out.")
     return redirect('index')
