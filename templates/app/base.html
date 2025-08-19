@@ -20,6 +20,9 @@
     <div class="position-fixed w-100 h-100">
         <div class="w-100 h-100" style="background: linear-gradient(135deg, #007bff 0%, #a8edea 100%);"></div>
     </div>
+    {% block layout %}
+    {% block content %}{% endblock %}
+    {% endblock %}
     {% if messages %}
     <div class="position-fixed" style="bottom: 20px; right: 20px; z-index: 1080;">
         {% for message in messages %}
@@ -50,7 +53,7 @@
         {% endfor %}
     </div>
     {% endif %}
-    {% block content %}{% endblock %}
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
