@@ -1,10 +1,9 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as django_login, logout as django_logout
+from django.contrib.auth import login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from app.models import StudentProfile, TeacherProfile
-from django.contrib.auth.hashers import check_password
 
 # Create your views here.
 def index(request):
@@ -17,61 +16,60 @@ def contact(request):
         return redirect('dashboard')
     return render(request,"app/contact.html")
 
+def _find_user_by_student(user_input):
+    try:
+        student_profile = StudentProfile.objects.get(student_id=user_input)
+        return student_profile.user, True, False
+    except StudentProfile.DoesNotExist:
+        try:
+            student_profile = StudentProfile.objects.get(user__email=user_input)
+            return student_profile.user, True, False
+        except StudentProfile.DoesNotExist:
+            return None, False, False
+
+def _find_user_by_teacher(user_input):
+    try:
+        teacher_profile = TeacherProfile.objects.get(employee_id=user_input)
+        return teacher_profile.user, False, True
+    except TeacherProfile.DoesNotExist:
+        try:
+            teacher_profile = TeacherProfile.objects.get(user__email=user_input)
+            return teacher_profile.user, False, True
+        except TeacherProfile.DoesNotExist:
+            return None, False, False
+
+def _find_user_by_admin(user_input):
+    try:
+        user = User.objects.get(email=user_input)
+        return user, False, False
+    except User.DoesNotExist:
+        try:
+            user = User.objects.get(username=user_input)
+            return user, False, False
+        except User.DoesNotExist:
+            return None, False, False
+
+def _must_reset_password(user, is_student, is_teacher):
+    if is_student and hasattr(user, 'student_profile'):
+        return getattr(user.student_profile, 'must_reset_password', False)
+    if is_teacher and hasattr(user, 'teacher_profile'):
+        return getattr(user.teacher_profile, 'must_reset_password', False)
+    return False
+
 def login(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     if request.method == "POST":
         user_input = request.POST.get('user')
         password = request.POST.get('password')
-        user = None
-        is_student = False
-        is_teacher = False
-
-        # Try to find user by student_id or email (student)
-        try:
-            student_profile = StudentProfile.objects.get(student_id=user_input)
-            user = student_profile.user
-            is_student = True
-        except StudentProfile.DoesNotExist:
-            try:
-                student_profile = StudentProfile.objects.get(user__email=user_input)
-                user = student_profile.user
-                is_student = True
-            except StudentProfile.DoesNotExist:
-                pass
-
-        # Try to find user by teacher_id or email (teacher)
+        user, is_student, is_teacher = _find_user_by_student(user_input)
         if not user:
-            try:
-                teacher_profile = TeacherProfile.objects.get(employee_id=user_input)
-                user = teacher_profile.user
-                is_teacher = True
-            except TeacherProfile.DoesNotExist:
-                try:
-                    teacher_profile = TeacherProfile.objects.get(user__email=user_input)
-                    user = teacher_profile.user
-                    is_teacher = True
-                except TeacherProfile.DoesNotExist:
-                    pass
-
-        # Fallback: Try username or email (for admin or others)
+            user, is_student, is_teacher = _find_user_by_teacher(user_input)
         if not user:
-            try:
-                user = User.objects.get(email=user_input)
-            except User.DoesNotExist:
-                try:
-                    user = User.objects.get(username=user_input)
-                except User.DoesNotExist:
-                    user = None
+            user, is_student, is_teacher = _find_user_by_admin(user_input)
 
         if user and user.check_password(password):
-            # Only check must_reset_password for students and teachers
-            must_reset = False
-            if is_student and hasattr(user, 'student_profile') and getattr(user.student_profile, 'must_reset_password', False):
-                must_reset = True
-            if is_teacher and hasattr(user, 'teacher_profile') and getattr(user.teacher_profile, 'must_reset_password', False):
-                must_reset = True
-            if must_reset:
+            if _must_reset_password(user, is_student, is_teacher):
                 request.session['reset_user_id'] = user.id
                 return redirect('reset_password')
             django_login(request, user)
