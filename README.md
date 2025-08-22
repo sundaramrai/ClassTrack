@@ -1,4 +1,4 @@
-## Getting Started
+# Getting Started
 
 First, we have to install **virtualenv** to start the project in command prompt.
 `
@@ -18,7 +18,7 @@ After installation we need to activate virtualenv by running:
 Once virtualenv is activated.
 Execute these commands to build your Django project
 
-```
+```bash
 pip install django
 django-admin startproject <project_name>
 python manage.py startapp <app_name>
@@ -36,14 +36,10 @@ Now, to start with running your application run this command:
 python manage.py runserver
 `
 
-## Start your development 
+## Start your development
 
 Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/) with your browser to see the result and [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) to access the database.
 
 ## Glimpse of Django-App
 
 ![image](https://github.com/sundaram-rai/django-erp-attendance/assets/98939843/f4e8f83b-ab57-4127-b87c-f7c7a4307e48) ![image](https://github.com/sundaram-rai/django-erp-attendance/assets/98939843/cb06b294-d73a-4d1f-9c18-ec58b294eb29)
-
-
-
-
