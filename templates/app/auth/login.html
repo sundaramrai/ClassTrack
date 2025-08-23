@@ -13,15 +13,13 @@
       </div>
       <form action="/login" method="post" autocomplete="off">
         {% csrf_token %}
-        <!-- UserID or Email -->
-        <div class="form-group mb-2">
-          <label for="user" class="sr-only">UserID or Email</label>
-          <input type="text" class="form-control" id="user" placeholder="UserID or Email" name="user" required>
+        <div class="form-group mb-3">
+          <input type="text" class="form-control" id="user" placeholder="Enter your UserID or Email" name="user"
+            required>
         </div>
-        <!-- Password -->
-        <div class="form-group mb-2">
-          <label for="password" class="sr-only">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+        <div class="form-group mb-3">
+          <input type="password" class="form-control" id="password" placeholder="Enter your password" name="password"
+            required>
         </div>
         <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
       </form>
