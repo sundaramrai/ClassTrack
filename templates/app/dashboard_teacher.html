@@ -1,0 +1,39 @@
+{% extends "app/base.html" %}
+{% block title %}Teacher Dashboard{% endblock %}
+{% block body_class %}bg-light min-vh-100{% endblock %}
+{% block layout %}
+{% load static %}
+<div class="container-fluid">
+    <div class="row">
+        {% include "app/sidebar.html" %}
+        <div class="col-md-10 ml-sm-auto px-4 py-4">
+            <h1 class="h3 text-white mb-4">Welcome, {{ user.get_full_name }}</h1>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">My Classes</h5>
+                    <ul>
+                        {% for division in teacher_divisions %}
+                        <li>{{ division.class_field.name }} - {{ division.name }}</li>
+                        {% empty %}
+                        <li>No classes assigned.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Attendance</h5>
+                    <ul>
+                        {% for attendance in pending_attendance %}
+                        <li>{{ attendance }}</li>
+                        {% empty %}
+                        <li>No pending attendance.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <!-- Add more teacher-specific widgets here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
