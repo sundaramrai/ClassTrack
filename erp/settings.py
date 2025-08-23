@@ -10,25 +10,32 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-from pathlib import Path
-from .info import *
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-EMAIL_USE_TLS=EMAIL_USE_TLS
-EMAIL_HOST=EMAIL_HOST
-EMAIL_HOST_USER=EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD=EMAIL_HOST_PASSWORD
-EMAIL_PORT=EMAIL_PORT
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@inar0xoi-x+7965q(e0jlzjt$rf+efa)*6ttsl^_a!5as2j6i'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
