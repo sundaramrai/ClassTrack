@@ -4,6 +4,11 @@ from django.contrib import messages
 from django.contrib.auth import login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from app.models import StudentProfile, TeacherProfile, Class, Division
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
 
 # Create your views here.
 def index(request):
@@ -178,3 +183,62 @@ def signout(request):
     django_logout(request)
     messages.success(request, "You are successfully logged out.")
     return redirect('index')
+
+def forgot_password(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    if request.method == "POST":
+        email = request.POST.get('email')
+        user = User.objects.filter(email=email).first()
+        if user:
+            try:
+                token = default_token_generator.make_token(user)
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                reset_url = request.build_absolute_uri(
+                    reverse('reset_password_confirm', kwargs={'uidb64': uid, 'token': token})
+                )
+                send_mail(
+                    subject="ClassTrack Password Reset",
+                    message=f"Hi {user.get_full_name()},\n\nClick the link below to reset your password:\n{reset_url}\n\nIf you did not request this, ignore this email.",
+                    from_email=None,
+                    recipient_list=[user.email],
+                    fail_silently=False,
+                )
+                messages.success(request, "A password reset link has been sent to your email.")
+                return redirect('login')
+            except Exception as e:
+                messages.error(request, f"Error sending password reset email: {e}")
+        else:
+            messages.error(request, "No user found with that email address.")
+    return render(request, "app/auth/forgot_password.html")
+
+def reset_password_confirm(request, uidb64, token):
+    from django.utils.http import urlsafe_base64_decode
+    from django.contrib.auth.tokens import default_token_generator
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (User.DoesNotExist, ValueError, TypeError, OverflowError):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == "POST":
+            password = request.POST.get('password')
+            c_password = request.POST.get('c_password')
+            if password != c_password:
+                messages.error(request, "Passwords do not match")
+                return render(request, "app/auth/reset_password_confirm.html")
+            user.set_password(password)
+            user.save()
+            if hasattr(user, 'student_profile'):
+                user.student_profile.must_reset_password = False
+                user.student_profile.save()
+            if hasattr(user, 'teacher_profile'):
+                user.teacher_profile.must_reset_password = False
+                user.teacher_profile.save()
+            messages.success(request, "Password reset successful. Please login.")
+            return redirect('login')
+        return render(request, "app/auth/reset_password_confirm.html")
+    else:
+        messages.error(request, "The password reset link is invalid or has expired.")
+        return redirect('forgot_password')
