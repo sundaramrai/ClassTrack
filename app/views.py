@@ -9,12 +9,12 @@ from app.models import StudentProfile, TeacherProfile, Class, Division
 def index(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
-    return render(request,"app/index.html")
+    return render(request, "app/index.html")
 
 def contact(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
-    return render(request,"app/contact.html")
+    return render(request, "app/contact/contact.html")
 
 def _find_user_by_student(user_input):
     try:
@@ -77,8 +77,8 @@ def login(request):
             return redirect('dashboard')
         else:
             messages.error(request, "Invalid credentials")
-            return render(request, "app/login.html")
-    return render(request, "app/login.html")
+            return render(request, "app/auth/login.html")
+    return render(request, "app/auth/login.html")
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -93,7 +93,7 @@ def reset_password(request):
         c_password = request.POST.get('c_password')
         if password != c_password:
             messages.error(request, "Passwords do not match")
-            return render(request, "app/reset_password.html")
+            return render(request, "app/auth/reset_password.html")
         user.set_password(password)
         user.save()
         # Set must_reset_password = False
@@ -106,7 +106,7 @@ def reset_password(request):
         messages.success(request, "Password reset successful. Please login.")
         del request.session['reset_user_id']
         return redirect('login')
-    return render(request, "app/reset_password.html")
+    return render(request, "app/auth/reset_password.html")
 
 @login_required(login_url='login')
 def dashboard(request):
@@ -118,7 +118,7 @@ def dashboard(request):
     elif hasattr(user, 'student_profile'):
         return redirect('dashboard_student')
     else:
-        return render(request, "app/dashboard.html")
+        return render(request, "app/dashboard/dashboard.html")
 
 @login_required(login_url='login')
 def dashboard_student(request):
@@ -134,7 +134,7 @@ def dashboard_student(request):
         # Suppose you have an Announcement model related to Division
         # announcements = Announcement.objects.filter(division=student_profile.division).values_list('text', flat=True)
         announcements = [a.text for a in getattr(student_profile.division, 'announcements', [])]
-    return render(request, "app/dashboard_student.html", {
+    return render(request, "app/dashboard/dashboard_student.html", {
         "attendance_percent": attendance_percent,
         "announcements": announcements,
     })
@@ -150,7 +150,7 @@ def dashboard_teacher(request):
     pending_attendance = []
     # If you have an Attendance model, you can filter for pending records
     # pending_attendance = Attendance.objects.filter(division__in=teacher_divisions, status='pending')
-    return render(request, "app/dashboard_teacher.html", {
+    return render(request, "app/dashboard/dashboard_teacher.html", {
         "teacher_divisions": teacher_divisions,
         "pending_attendance": pending_attendance,
     })
@@ -167,7 +167,7 @@ def dashboard_admin(request):
     recent_activity = []
     # If you have an ActivityLog model, you can fetch recent logs
     # recent_activity = ActivityLog.objects.order_by('-timestamp')[:10]
-    return render(request, "app/dashboard_admin.html", {
+    return render(request, "app/dashboard/dashboard_admin.html", {
         "total_students": total_students,
         "total_teachers": total_teachers,
         "total_classes": total_classes,
