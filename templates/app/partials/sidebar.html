@@ -101,15 +101,21 @@
         <div class="font-weight-bold text-uppercase mt-2 text-primary">{{ user.get_full_name }}</div>
         <div class="text-muted">@{{ user.student_profile.student_id }}</div>
         <div class="text-muted small">
-            {% if user.student_profile.category == 'science-jee' %}
+            {% with category=user.student_profile.category|lower %}
+            {% if category == 'science-jee' %}
             Science - JEE
-            {% elif user.student_profile.category == 'science-neet' %}
+            {% elif category == 'science-neet' %}
             Science - NEET
-            {% elif user.student_profile.category == 'commerce-ca' %}
+            {% elif category == 'science-board' %}
+            Science - Board
+            {% elif category == 'commerce-ca' %}
             Commerce - CA
+            {% elif category == 'commerce-board' %}
+            Commerce - Board
             {% else %}
             Student
             {% endif %}
+            {% endwith %}
         </div>
     </div>
     <ul class="nav flex-column w-100">
