@@ -4,3 +4,6 @@
 /erp/__pycache__/
 instructions.ini
 db.sqlite3
+/app/migrations
+scripts/
+.env
