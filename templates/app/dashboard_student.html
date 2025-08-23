@@ -1,0 +1,51 @@
+{% extends "app/base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+{% block body_class %}bg-light min-vh-100{% endblock %}
+{% block layout %}
+{% load static %}
+<div class="container-fluid">
+    <div class="row">
+        {% include "app/sidebar.html" %}
+        <div class="col-md-10 ml-sm-auto px-4 py-4">
+            <h1 class="h3 text-white mb-4">Welcome, {{ user.get_full_name }}</h1>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Attendance Summary</h5>
+                    <p class="card-text">Attendance: <strong>{{ attendance_percent }}%</strong></p>
+                    <p class="card-text">
+                        Division: <strong>
+                            {% if user.student_profile.division %}
+                            {{ user.student_profile.division }}
+                            {% else %}
+                            Not assigned
+                            {% endif %}
+                        </strong>
+                    </p>
+                    <p class="card-text">
+                        Category: <strong>
+                            {% if user.student_profile.category %}
+                            {{ user.student_profile.get_category_display }}
+                            {% else %}
+                            Not set
+                            {% endif %}
+                        </strong>
+                    </p>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Announcements</h5>
+                    <ul>
+                        {% for announcement in announcements %}
+                        <li>{{ announcement }}</li>
+                        {% empty %}
+                        <li>No announcements.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <!-- Add more student-specific widgets here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
