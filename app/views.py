@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
-from app.models import StudentProfile, TeacherProfile
+from app.models import StudentProfile, TeacherProfile, Class, Division
 
 # Create your views here.
 def index(request):
@@ -110,135 +110,71 @@ def reset_password(request):
 
 @login_required(login_url='login')
 def dashboard(request):
-    user_cards = [
-        {
-            "img": "https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDV8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60g",
-            "name": "Neil Wilson",
-            "department": "COMP",
-            "percent": 85,
-        },
-        {
-            "img": "https://images.unsplash.com/photo-1543132220-3ec99c6094dc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDl8fHByb2ZpbGV8ZW58MHwxfDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-            "name": "Finn Taylor",
-            "department": "IT",
-            "percent": 82,
-        },
-        {
-            "img": "https://images.unsplash.com/photo-1598198414976-ddb788ec80c1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NzV8fHByb2ZpbGV8ZW58MHwxfDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-            "name": "Nick Johnson",
-            "department": "EXTC",
-            "percent": 94,
-        },
-        {
-            "img": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHByb2ZpbGV8ZW58MHwxfDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-            "name": "Sarah Mayer",
-            "department": "AI&DS",
-            "percent": 85,
-        },
-        {
-            "img": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzN8fHByb2ZpbGV8ZW58MHwxfDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-            "name": "Zayn Shaw",
-            "department": "AI&ML",
-            "percent": 82,
-        },
-        {
-            "img": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDR8fHByb2ZpbGV8ZW58MHwxfDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-            "name": "Moses Kaul",
-            "department": "COMP",
-            "percent": 93,
-        },
-    ]
-    attendance_list = [
-        {
-            "id": "102684",
-            "name": "Neil Wilson",
-            "department": "COMP",
-            "date": "03-24-22",
-            "year": "SE",
-            "division": "B"
-        },
-        {
-            "id": "102168",
-            "name": "Finn Taylor",
-            "department": "IT",
-            "date": "03-24-22",
-            "year": "SE",
-            "division": "A"
-        },
-        {
-            "id": "103428",
-            "name": "Nick Johnson",
-            "department": "EXTC",
-            "date": "03-24-22",
-            "year": "TE",
-            "division": "C"
-        },
-        {
-            "id": "101224",
-            "name": "Sarah Mayer",
-            "department": "AI&DS",
-            "date": "03-24-22",
-            "year": "FE",
-            "division": "B"
-        },
-        {
-            "id": "102554",
-            "name": "Zayn Shaw",
-            "department": "AI&ML",
-            "date": "03-24-22",
-            "year": "SE",
-            "division": "C"
-        },
-        {
-            "id": "104763",
-            "name": "Moses Kaul",
-            "department": "COMP",
-            "date": "03-24-22",
-            "year": "BE",
-            "division": "A"
-        },
-    ]
-    return render(request, "app/dashboard.html", {
-        "user_cards": user_cards,
-        "attendance_list": attendance_list,
+    user = request.user
+    if user.is_superuser or user.is_staff:
+        return redirect('dashboard_admin')
+    elif hasattr(user, 'teacher_profile'):
+        return redirect('dashboard_teacher')
+    elif hasattr(user, 'student_profile'):
+        return redirect('dashboard_student')
+    else:
+        return render(request, "app/dashboard.html")
+
+@login_required(login_url='login')
+def dashboard_student(request):
+    user = request.user
+    if not hasattr(user, 'student_profile'):
+        return redirect('dashboard')
+    student_profile = user.student_profile
+    # Example: Calculate attendance percent (replace with your real logic)
+    attendance_percent = getattr(student_profile, 'attendance_percent', 0)
+    # Example: Get announcements for student's division (replace with your real logic)
+    announcements = []
+    if student_profile.division:
+        # Suppose you have an Announcement model related to Division
+        # announcements = Announcement.objects.filter(division=student_profile.division).values_list('text', flat=True)
+        announcements = [a.text for a in getattr(student_profile.division, 'announcements', [])]
+    return render(request, "app/dashboard_student.html", {
+        "attendance_percent": attendance_percent,
+        "announcements": announcements,
+    })
+
+@login_required(login_url='login')
+def dashboard_teacher(request):
+    user = request.user
+    if not hasattr(user, 'teacher_profile'):
+        return redirect('dashboard')
+    teacher_profile = user.teacher_profile
+    teacher_divisions = Division.objects.filter(teacher=teacher_profile)
+    # Example: Get pending attendance (replace with your real logic)
+    pending_attendance = []
+    # If you have an Attendance model, you can filter for pending records
+    # pending_attendance = Attendance.objects.filter(division__in=teacher_divisions, status='pending')
+    return render(request, "app/dashboard_teacher.html", {
+        "teacher_divisions": teacher_divisions,
+        "pending_attendance": pending_attendance,
+    })
+
+@login_required(login_url='login')
+def dashboard_admin(request):
+    user = request.user
+    if not (user.is_superuser or user.is_staff):
+        return redirect('dashboard')
+    total_students = StudentProfile.objects.count()
+    total_teachers = TeacherProfile.objects.count()
+    total_classes = Class.objects.count()
+    # Example: Get recent activity (replace with your real logic)
+    recent_activity = []
+    # If you have an ActivityLog model, you can fetch recent logs
+    # recent_activity = ActivityLog.objects.order_by('-timestamp')[:10]
+    return render(request, "app/dashboard_admin.html", {
+        "total_students": total_students,
+        "total_teachers": total_teachers,
+        "total_classes": total_classes,
+        "recent_activity": recent_activity,
     })
 
 def signout(request):
     django_logout(request)
     messages.success(request, "You are successfully logged out.")
     return redirect('index')
-
-# def register(request):
-#     if request.user.is_authenticated:
-#         return redirect('dashboard')
-#     if request.method == "POST":
-#         email = request.POST['email']
-#         fname = request.POST['fname']
-#         lname = request.POST['lname']
-#         password = request.POST['password']
-#         c_password = request.POST['c_password']
-
-#         has_error = False
-#         if User.objects.filter(email=email).exists():
-#             messages.error(request, "Email already exists")
-#             has_error = True
-#         if len(email) > 10:
-#             messages.error(request, "Email must be under 10 characters")
-#             has_error = True
-#         if password != c_password:
-#             messages.error(request, "Passwords do not match")
-#             has_error = True
-
-#         if has_error:
-#             return render(request, "app/register.html")
-
-#         myuser = User.objects.create_user(email=email, password=password)
-#         myuser.first_name = fname
-#         myuser.last_name = lname
-#         myuser.save()
-
-#         messages.success(request, 'You have registered successfully. Please login.')
-
-#         return redirect('login')
-
-#     return render(request, "app/register.html")
