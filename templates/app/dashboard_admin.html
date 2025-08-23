@@ -1,0 +1,53 @@
+{% extends "app/base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block body_class %}bg-light min-vh-100{% endblock %}
+{% block layout %}
+{% load static %}
+<div class="container-fluid">
+    <div class="row">
+        {% include "app/sidebar.html" %}
+        <div class="col-md-10 ml-sm-auto px-4 py-4">
+            <h1 class="h3 text-white mb-4">Welcome, Admin {{ user.get_full_name }}</h1>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card text-center shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Students</h5>
+                            <p class="display-4">{{ total_students }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card text-center shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Teachers</h5>
+                            <p class="display-4">{{ total_teachers }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card text-center shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Classes</h5>
+                            <p class="display-4">{{ total_classes }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Activity</h5>
+                    <ul>
+                        {% for activity in recent_activity %}
+                        <li>{{ activity }}</li>
+                        {% empty %}
+                        <li>No recent activity.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <!-- Add more admin-specific widgets here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
