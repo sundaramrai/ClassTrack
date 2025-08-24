@@ -5,6 +5,7 @@ from django.contrib.auth import login as django_login, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from app.models import StudentProfile, TeacherProfile, Class, Division
 from django.core.mail import send_mail
+from django.conf import settings
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -19,6 +20,50 @@ def index(request):
 def contact(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        message = request.POST.get("message")
+        subject = f"New Contact Form Submission from {name}"
+
+        # Improved HTML email body
+        html_body = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; color: #333;">
+            <h2 style="color: #2c3e50;">New Contact Form Submission</h2>
+            <table style="border-collapse: collapse; width: 100%; max-width: 600px;">
+                <tr>
+                    <td style="padding: 8px; font-weight: bold;">Name:</td>
+                    <td style="padding: 8px;">{name}</td>
+                </tr>
+                <tr style="background-color: #f9f9f9;">
+                    <td style="padding: 8px; font-weight: bold;">Email:</td>
+                    <td style="padding: 8px;">{email}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; font-weight: bold; vertical-align: top;">Message:</td>
+                    <td style="padding: 8px; white-space: pre-line;">{message}</td>
+                </tr>
+            </table>
+            <p style="margin-top: 24px; font-size: 12px; color: #888;">This message was sent from the contact form on your website.</p>
+        </body>
+        </html>
+        """
+        body = f"New Contact Form Submission\n\nName: {name}\nEmail: {email}\nMessage:\n{message}"
+
+        try:
+            send_mail(
+                subject=subject,
+                message=body,  # fallback plain text
+                from_email=email,
+                recipient_list=[settings.EMAIL_HOST_USER],
+                fail_silently=False,
+                html_message=html_body,
+            )
+            messages.success(request, "Your message has been sent successfully!")
+            return redirect("contact")
+        except Exception as e:
+            messages.error(request, f"Error sending message: {e}")
     return render(request, "app/contact/contact.html")
 
 def _find_user_by_student(user_input):
