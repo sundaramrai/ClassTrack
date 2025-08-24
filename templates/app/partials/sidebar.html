@@ -19,9 +19,13 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-danger" href="{% url 'signout' %}">
-                <i class="fas fa-sign-out-alt mr-2"></i> <span>Logout</span>
-            </a>
+            <form method="post" action="{% url 'signout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit"
+                    class="nav-link d-flex align-items-center px-3 py-2 rounded text-danger bg-transparent border-0 w-100 text-left">
+                    <i class="fas fa-sign-out-alt mr-2"></i> <span>Logout</span>
+                </button>
+            </form>
         </li>
     </ul>
     <div class="mt-auto w-100 text-center pb-3">
@@ -82,9 +86,13 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-danger" href="{% url 'signout' %}">
-                <i class="fas fa-sign-out-alt mr-2"></i> <span>Log out</span>
-            </a>
+            <form method="post" action="{% url 'signout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit"
+                    class="nav-link d-flex align-items-center px-3 py-2 rounded text-danger bg-transparent border-0 w-100 text-left">
+                    <i class="fas fa-sign-out-alt mr-2"></i> <span>Log out</span>
+                </button>
+            </form>
         </li>
     </ul>
     <div class="mt-auto w-100 text-center pb-3">
@@ -146,9 +154,13 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-danger" href="{% url 'signout' %}">
-                <i class="fas fa-sign-out-alt mr-2"></i> <span>Log out</span>
-            </a>
+            <form method="post" action="{% url 'signout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit"
+                    class="nav-link d-flex align-items-center px-3 py-2 rounded text-danger bg-transparent border-0 w-100 text-left">
+                    <i class="fas fa-sign-out-alt mr-2"></i> <span>Log out</span>
+                </button>
+            </form>
         </li>
     </ul>
     <div class="mt-auto w-100 text-center pb-3">
